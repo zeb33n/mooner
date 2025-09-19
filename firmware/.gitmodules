@@ -1,0 +1,15 @@
+[submodule "include/hardware"]
+	path = include/hardware
+	url = git@gitlab.com:gameblaster/include/hardware.git
+[submodule "include/standard"]
+	path = include/standard
+	url = git@gitlab.com:gameblaster/include/standard.git
+[submodule "include/util"]
+	path = include/util
+	url = git@gitlab.com:gameblaster/include/util.git
+[submodule "tools/pbm2h"]
+	path = tools/pbm2h
+	url = git@gitlab.com:gameblaster/tools/pbm2h.git
+[submodule "tools/pbm2font"]
+	path = tools/pbm2font
+	url = git@gitlab.com:gameblaster/tools/pbm2font.git

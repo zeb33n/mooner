@@ -1,0 +1,214 @@
+#ifndef STM32_DMAMUX_H
+#define STM32_DMAMUX_H
+
+#include <stdint.h>
+#include <hardware/stm32/mmap.h>
+
+
+typedef enum
+{
+	STM32_DMAMUX_REQ_NONE           =   0,
+	STM32_DMAMUX_REQ_GEN0           =   1,
+	STM32_DMAMUX_REQ_GEN1           =   2,
+	STM32_DMAMUX_REQ_GEN2           =   3,
+	STM32_DMAMUX_REQ_GEN3           =   4,
+	STM32_DMAMUX_REQ_ADC1           =   5,
+	STM32_DMAMUX_REQ_DAC1_CH1       =   6,
+	STM32_DMAMUX_REQ_DAC1_CH2       =   7,
+	STM32_DMAMUX_REQ_TIM6_UP        =   8,
+	STM32_DMAMUX_REQ_TIM7_UP        =   9,
+	STM32_DMAMUX_REQ_SPI1_RX        =  10,
+	STM32_DMAMUX_REQ_SPI1_TX        =  11,
+	STM32_DMAMUX_REQ_SPI2_RX        =  12,
+	STM32_DMAMUX_REQ_SPI2_TX        =  13,
+	STM32_DMAMUX_REQ_SPI3_RX        =  14,
+	STM32_DMAMUX_REQ_SPI3_TX        =  15,
+	STM32_DMAMUX_REQ_I2C1_RX        =  16,
+	STM32_DMAMUX_REQ_I2C1_TX        =  17,
+	STM32_DMAMUX_REQ_I2C2_RX        =  18,
+	STM32_DMAMUX_REQ_I2C2_TX        =  19,
+	STM32_DMAMUX_REQ_I2C3_RX        =  20,
+	STM32_DMAMUX_REQ_I2C3_TX        =  21,
+	STM32_DMAMUX_REQ_I2C4_RX        =  22,
+	STM32_DMAMUX_REQ_I2C4_TX        =  23,
+	STM32_DMAMUX_REQ_USART1_RX      =  24,
+	STM32_DMAMUX_REQ_USART1_TX      =  25,
+	STM32_DMAMUX_REQ_USART2_RX      =  26,
+	STM32_DMAMUX_REQ_USART2_TX      =  27,
+	STM32_DMAMUX_REQ_USART3_RX      =  28,
+	STM32_DMAMUX_REQ_USART3_TX      =  29,
+	STM32_DMAMUX_REQ_UART4_RX       =  30,
+	STM32_DMAMUX_REQ_UART4_TX       =  31,
+	STM32_DMAMUX_REQ_UART5_RX       =  32,
+	STM32_DMAMUX_REQ_UART5_TX       =  33,
+	STM32_DMAMUX_REQ_LPUART1_RX     =  34,
+	STM32_DMAMUX_REQ_LPUART1_TX     =  35,
+	STM32_DMAMUX_REQ_ADC2           =  36,
+	STM32_DMAMUX_REQ_ADC3           =  37,
+	STM32_DMAMUX_REQ_ADC4           =  38,
+	STM32_DMAMUX_REQ_ADC5           =  39,
+	STM32_DMAMUX_REQ_QUADSPI        =  40,
+	STM32_DMAMUX_REQ_DAC2_CH1       =  41,
+	STM32_DMAMUX_REQ_TIM1_CH1       =  42,
+	STM32_DMAMUX_REQ_TIM1_CH2       =  43,
+	STM32_DMAMUX_REQ_TIM1_CH3       =  44,
+	STM32_DMAMUX_REQ_TIM1_CH4       =  45,
+	STM32_DMAMUX_REQ_TIM1_UP        =  46,
+	STM32_DMAMUX_REQ_TIM1_TRIG      =  47,
+	STM32_DMAMUX_REQ_TIM1_COM       =  48,
+	STM32_DMAMUX_REQ_TIM8_CH1       =  49,
+	STM32_DMAMUX_REQ_TIM8_CH2       =  50,
+	STM32_DMAMUX_REQ_TIM8_CH3       =  51,
+	STM32_DMAMUX_REQ_TIM8_CH4       =  52,
+	STM32_DMAMUX_REQ_TIM8_UP        =  53,
+	STM32_DMAMUX_REQ_TIM8_TRIG      =  54,
+	STM32_DMAMUX_REQ_TIM8_COM       =  55,
+	STM32_DMAMUX_REQ_TIM2_CH1       =  56,
+	STM32_DMAMUX_REQ_TIM2_CH2       =  57,
+	STM32_DMAMUX_REQ_TIM2_CH3       =  58,
+	STM32_DMAMUX_REQ_TIM2_CH4       =  59,
+	STM32_DMAMUX_REQ_TIM2_UP        =  60,
+	STM32_DMAMUX_REQ_TIM3_CH1       =  61,
+	STM32_DMAMUX_REQ_TIM3_CH2       =  62,
+	STM32_DMAMUX_REQ_TIM3_CH3       =  63,
+	STM32_DMAMUX_REQ_TIM3_CH4       =  64,
+	STM32_DMAMUX_REQ_TIM3_UP        =  65,
+	STM32_DMAMUX_REQ_TIM3_TRIG      =  66,
+	STM32_DMAMUX_REQ_TIM4_CH1       =  67,
+	STM32_DMAMUX_REQ_TIM4_CH2       =  68,
+	STM32_DMAMUX_REQ_TIM4_CH3       =  69,
+	STM32_DMAMUX_REQ_TIM4_CH4       =  70,
+	STM32_DMAMUX_REQ_TIM4_UP        =  71,
+	STM32_DMAMUX_REQ_TIM5_CH1       =  72,
+	STM32_DMAMUX_REQ_TIM5_CH2       =  73,
+	STM32_DMAMUX_REQ_TIM5_CH3       =  74,
+	STM32_DMAMUX_REQ_TIM5_CH4       =  75,
+	STM32_DMAMUX_REQ_TIM5_UP        =  76,
+	STM32_DMAMUX_REQ_TIM5_TRIG      =  77,
+	STM32_DMAMUX_REQ_TIM15_CH1      =  78,
+	STM32_DMAMUX_REQ_TIM15_UP       =  79,
+	STM32_DMAMUX_REQ_TIM15_TRIG     =  80,
+	STM32_DMAMUX_REQ_TIM15_COM      =  81,
+	STM32_DMAMUX_REQ_TIM16_CH1      =  62,
+	STM32_DMAMUX_REQ_TIM16_UP       =  83,
+	STM32_DMAMUX_REQ_TIM17_CH1      =  84,
+	STM32_DMAMUX_REQ_TIM17_UP       =  85,
+	STM32_DMAMUX_REQ_TIM20_CH1      =  86,
+	STM32_DMAMUX_REQ_TIM20_CH2      =  87,
+	STM32_DMAMUX_REQ_TIM20_CH3      =  88,
+	STM32_DMAMUX_REQ_TIM20_CH4      =  89,
+	STM32_DMAMUX_REQ_TIM20_UP       =  90,
+	STM32_DMAMUX_REQ_AES_IN         =  91,
+	STM32_DMAMUX_REQ_AES_OUT        =  92,
+	STM32_DMAMUX_REQ_TIM20_TRIG     =  93,
+	STM32_DMAMUX_REQ_TIM20_COM      =  94,
+	STM32_DMAMUX_REQ_HRTIM_MASTER   =  95,
+	STM32_DMAMUX_REQ_HRTIM_TIMA     =  96,
+	STM32_DMAMUX_REQ_HRTIM_TIMB     =  97,
+	STM32_DMAMUX_REQ_HRTIM_TIMC     =  98,
+	STM32_DMAMUX_REQ_HRTIM_TIMD     =  99,
+	STM32_DMAMUX_REQ_HRTIM_TIME     = 100,
+	STM32_DMAMUX_REQ_HRTIM_TIMF     = 101,
+	STM32_DMAMUX_REQ_DAC3_CH1       = 102,
+	STM32_DMAMUX_REQ_DAC3_CH2       = 103,
+	STM32_DMAMUX_REQ_DAC4_CH1       = 104,
+	STM32_DMAMUX_REQ_DAC4_CH2       = 105,
+	STM32_DMAMUX_REQ_SPI4_RX        = 106,
+	STM32_DMAMUX_REQ_SPI4_TX        = 107,
+	STM32_DMAMUX_REQ_SAI1_A         = 108,
+	STM32_DMAMUX_REQ_SAI1_B         = 109,
+	STM32_DMAMUX_REQ_FMAC_READ      = 110,
+	STM32_DMAMUX_REQ_FMAC_WRITE     = 111,
+	STM32_DMAMUX_REQ_CORDIC_READ    = 112,
+	STM32_DMAMUX_REQ_CORDIC_WRITE   = 113,
+	STM32_DMAMUX_REQ_UCPD1_RX       = 114,
+	STM32_DMAMUX_REQ_UCPD1_TX       = 115,
+} stm32_dmamux_req_e;
+
+typedef enum
+{
+	STM32_DMAMUX_TRIG_EXTI_LINE0  =  0,
+	STM32_DMAMUX_TRIG_EXTI_LINE1  =  1,
+	STM32_DMAMUX_TRIG_EXTI_LINE2  =  2,
+	STM32_DMAMUX_TRIG_EXTI_LINE3  =  3,
+	STM32_DMAMUX_TRIG_EXTI_LINE4  =  4,
+	STM32_DMAMUX_TRIG_EXTI_LINE5  =  5,
+	STM32_DMAMUX_TRIG_EXTI_LINE6  =  6,
+	STM32_DMAMUX_TRIG_EXTI_LINE7  =  7,
+	STM32_DMAMUX_TRIG_EXTI_LINE8  =  8,
+	STM32_DMAMUX_TRIG_EXTI_LINE9  =  9,
+	STM32_DMAMUX_TRIG_EXTI_LINE10 = 10,
+	STM32_DMAMUX_TRIG_EXTI_LINE11 = 11,
+	STM32_DMAMUX_TRIG_EXTI_LINE12 = 12,
+	STM32_DMAMUX_TRIG_EXTI_LINE13 = 13,
+	STM32_DMAMUX_TRIG_EXTI_LINE14 = 14,
+	STM32_DMAMUX_TRIG_EXTI_LINE15 = 15,
+	STM32_DMAMUX_TRIG_EVT0        = 16,
+	STM32_DMAMUX_TRIG_EVT1        = 17,
+	STM32_DMAMUX_TRIG_EVT2        = 18,
+	STM32_DMAMUX_TRIG_EVT3        = 19,
+	STM32_DMAMUX_TRIG_LPTIM1_OUT  = 20,
+} stm32_dmamux_trig_e;
+
+typedef enum
+{
+	STM32_DMAMUX_POL_NONE         = 0,
+	STM32_DMAMUX_POL_RISING_EDGE  = 1,
+	STM32_DMAMUX_POL_FALLING_EDGE = 2,
+	STM32_DMAMUX_POL_BOTH         = 3,
+} stm32_dmamux_pol_e;
+
+typedef union
+{
+	struct
+	{
+		uint32_t dmareq_id : 7;
+		uint32_t res7      : 1;
+		uint32_t soie      : 1;
+		uint32_t ege       : 1;
+		uint32_t res15_10  : 6;
+		uint32_t se        : 1;
+		uint32_t spol      : 2;
+		uint32_t nbreq     : 5;
+		uint32_t sync_id   : 5;
+		uint32_t res31_29  : 3;
+	};
+
+	uint32_t mask;
+} stm32_dmamux_cc_t;
+
+typedef union
+{
+	struct
+	{
+		uint32_t sig_id    : 4;
+		uint32_t res7_5    : 3;
+		uint32_t oie       : 1;
+		uint32_t res15_9   : 7;
+		uint32_t ge        : 1;
+		uint32_t gpol      : 2;
+		uint32_t gnbreq    : 5;
+		uint32_t res31_24  : 8;
+	};
+
+	uint32_t mask;
+} stm32_dmamux_rgc_t;
+
+
+typedef struct
+{
+	stm32_dmamux_cc_t  cc[12];
+	uint32_t           res31_12[20];
+	const uint32_t     cs;
+	uint32_t           cf;
+	uint32_t           res63_34[30];
+	stm32_dmamux_rgc_t rgc[4];
+	uint32_t           res79_68[12];
+	const uint32_t     rgs;
+	uint32_t           rgf;
+	uint32_t           res255_82[174];
+} stm32_dmamux_t;
+
+static volatile stm32_dmamux_t * const stm32_dmamux = (volatile stm32_dmamux_t *)STM32_MMAP_DMAMUX;
+
+#endif
