@@ -39,7 +39,7 @@ bool point_on_line(Coord_uint8 s, Coord_uint8 e, Coord_uint8 p) {
 
   // need to lshift here before the divide otherwise not at the start of the
   // function?
-  uint32_t m = (e32.y - s32.y) / (e.x - s.x);
+  uint32_t m = (e32.y - s32.y) / (e32.x - s32.x);
   uint32_t c = e32.y - m * e32.x;
   bool y_in_bounds =
       uint32__min(e32.y, s32.y) <= p32.y && p32.y <= uint32__max(e32.y, s32.y);
@@ -60,9 +60,13 @@ static void rect_scan_callback(rgb565_t* color, uint8_t size, uint8_t row) {
   (void)size;
   (void)row;
 
+  rgb565_t colors[] = {RGB565_GREEN, RGB565_RED, RGB565_BLUE};
+
   for (int i = 0; i < rect_w; i++) {
-    color[i] = rect_c;
+    color[i] = colors[row];
   }
+  // color[1] = RGB565_GREEN;
+  // color[2] = RGB565_BLUE;
 }
 
 Coord_uint8 coord_e = {50, 50};
@@ -116,19 +120,22 @@ bool main(unsigned int signal, const gbfw_api_t* api) {
 
   gbfw_api_init(api);
 
-  Coord_uint8 p;
+  // Coord_uint8 p;
 
   while (!exit) {
-    for (uint8_t x = 0; x < GBFW_DISPLAY_WIDTH; x++) {
-      for (uint8_t y = 0; y < GBFW_DISPLAY_HEIGHT; y++) {
-        p = (Coord_uint8){x, y};
-        if (point_on_line(coord_s, coord_e, p)) {
-          render_rectangle(x, y, 1, 1, RGB565_GREEN);
-          continue;
-        }
-        render_rectangle(x, y, 1, 1, RGB565_BLUE);
-      }
-    }
+    // for (uint8_t x = 0; x < GBFW_DISPLAY_WIDTH; x++) {
+    //   for (uint8_t y = 0; y < GBFW_DISPLAY_HEIGHT; y++) {
+    //     p = (Coord_uint8){x, y};
+    //     if (point_on_line(coord_s, coord_e, p)) {
+    //       render_rectangle(x, y, 1, 1, RGB565_GREEN);
+    //       continue;
+    //     }
+    //     render_rectangle(x, y, 1, 1, RGB565_BLUE);
+    //   }
+    // }
+
+    render_rectangle(50, 50, 6, 3, RGB565_BLUE);
+
     // render_rectangle(0, 0, GBFW_DISPLAY_WIDTH, GBFW_DISPLAY_HEIGHT,
     //                  RGB565_BLUE);
     // render_rectangle(50, 50, 3, 10, RGB565_GREEN);
