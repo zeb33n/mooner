@@ -23,6 +23,14 @@ Coord_uint32 coord_uint8_2_uint32(Coord_uint8 c) {
   return (Coord_uint32){x, y};
 }
 
+uint8_t uint8__min(uint8_t a, uint8_t b) {
+  return a < b ? a : b;
+}
+
+uint8_t uint8__max(uint8_t a, uint8_t b) {
+  return a > b ? a : b;
+}
+
 uint32_t uint32__min(uint32_t a, uint32_t b) {
   return a < b ? a : b;
 }
@@ -36,9 +44,6 @@ bool point_on_line(Coord_uint8 s, Coord_uint8 e, Coord_uint8 p) {
   Coord_uint32 s32 = coord_uint8_2_uint32(s);
   Coord_uint32 e32 = coord_uint8_2_uint32(e);
   Coord_uint32 p32 = coord_uint8_2_uint32(p);
-
-  // need to lshift here before the divide otherwise not at the start of the
-  // function?
   uint32_t m = (e32.y - s32.y) / (e32.x - s32.x);
   uint32_t c = e32.y - m * e32.x;
   bool y_in_bounds =
@@ -51,6 +56,21 @@ bool point_on_line(Coord_uint8 s, Coord_uint8 e, Coord_uint8 p) {
   }
   return false;
 }
+
+// bool point_on_line(Coord_uint8 s, Coord_uint8 e, Coord_uint8 p) {
+//   // TODO optimise to find equation only once per line
+//   Coord_uint32 s32 = coord_uint8_2_uint32(s);
+//   Coord_uint32 e32 = coord_uint8_2_uint32(e);
+//   uint32_t m32 = (e32.y - s32.y) / (e.x - s.x);
+//   uint32_t c = e.y - m32 * e.x;
+//   bool y_in_bounds = uint8__min(e.y, s.y) <= p.y && p.y <= uint8__max(e.y,
+//   s.y); bool x_in_bounds = uint8__min(e.x, s.x) <= p.x && p.x <=
+//   uint8__max(e.x, s.x); bool p_on_line = (p.y - m32 * p.x - c) == 0; if
+//   (p_on_line && y_in_bounds && x_in_bounds) {
+//     return true;
+//   }
+//   return false;
+// }
 
 uint8_t rect_w = 0;
 uint8_t rect_h = 0;
@@ -70,24 +90,19 @@ static void rect_scan_callback(rgb565_t* color, uint8_t size, uint8_t row) {
 }
 
 Coord_uint8 coord_e = {50, 50};
-Coord_uint8 coord_s = {100, 75};
+Coord_uint8 coord_s = {60, 55};
 
-// static void vector_scan_callback(rgb565_t* color, uint8_t size, uint8_t row)
-// {
-//   (void)size;
-//   (void)row;
-//   Coord p;
-//   for (int x = 0; x < rect_w; x++) {
-//     for (int y = 0; y < rect_h; y++) {
-//       p = (Coord){x, y};
-//       if (point_on_line(coord_s, coord_e, p)) {
-//         color[x] = RGB565_GREEN;
-//         continue;
-//       }
-//       color[x] = RGB565_BLUE;
-//     }
-//   }
-// }
+static void vector_scan_callback(rgb565_t* color, uint8_t size, uint8_t row) {
+  Coord_uint8 p;
+  for (int x = 0; x < size; x++) {
+    p = (Coord_uint8){x, row};
+    if (point_on_line(coord_s, coord_e, p)) {
+      color[x] = RGB565_GREEN;
+      continue;
+    }
+    color[x] = RGB565_BLUE;
+  }
+}
 
 void render_rectangle(uint8_t x,
                       uint8_t y,
@@ -134,13 +149,13 @@ bool main(unsigned int signal, const gbfw_api_t* api) {
     //   }
     // }
 
-    render_rectangle(50, 50, 6, 3, RGB565_BLUE);
+    // render_rectangle(50, 50, 6, 3, RGB565_BLUE);
 
     // render_rectangle(0, 0, GBFW_DISPLAY_WIDTH, GBFW_DISPLAY_HEIGHT,
     //                  RGB565_BLUE);
     // render_rectangle(50, 50, 3, 10, RGB565_GREEN);
-    // gbfw_display_render_region(0, 0, GBFW_DISPLAY_WIDTH, GBFW_DISPLAY_HEIGHT,
-    //                            vector_scan_callback);
+    gbfw_display_render_region(0, 0, GBFW_DISPLAY_WIDTH, GBFW_DISPLAY_HEIGHT,
+                               vector_scan_callback);
   }
   return 0;
 }
